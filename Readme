@@ -1,0 +1,16 @@
+This application is a Magic The Gathering collection database interface
+
+The application assumes:
+	There is a MYSQL server running on localhost:3306
+	The database has a user
+		name:MTG
+		pass:MTG
+	The database has a table "MTG_Collection" with the following columns
+			Set_Code
+			Collector_Number
+			Foil
+			Quantity
+	
+to run the application use ./MTGCD.sh after compiling.
+	You need to have "mysql-connector-java-5.1.39-bin.jar" in a folder "Class" for this script to work
+	The required file is a .jar which handles talking to the database
