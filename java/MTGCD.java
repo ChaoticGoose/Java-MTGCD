@@ -4,6 +4,7 @@ import java.sql.*;
 class MTGCD
 {
 	private static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+	private static Statement DatabaseStatement;
 	
  	public static void main(String[] argv)
  	{
@@ -35,6 +36,8 @@ class MTGCD
 				"&useSSL=false"
 			);
 			
+			DatabaseStatement = conn.createStatement();
+			
 				//output all cards in the database
 			//PrintAllCards(conn);	
 				//add a card (#2 from EMN) to the database, then remove it
@@ -54,16 +57,16 @@ class MTGCD
 				switch(Input)
 				{
 					case "add":
-						AddCard(conn);
+						AddCard();
 						break;
 					case "remove":
-						RemoveCard(conn);
+						RemoveCard();
 						break;
 					case "set":
-						PrintSet(conn);
+						PrintSet();
 						break;
 					case "all":
-						PrintAllCards(conn);
+						PrintAllCards();
 						break;
 					case "exit":
 						return;
@@ -160,15 +163,13 @@ class MTGCD
 	
 	//Adds a card to the collection
 		//if there is already a copy of the card, then increment the quantity
-	public static void AddCard(Connection conn, Card c)
+	public static void AddCard(Card c)
 	{
 		try
 		{
-				//create a statement object to set up database command
-			Statement st = conn.createStatement();
 				//execute a query, and get the response
 				//this query selects all recored (all cards) from the MTG_Collection database
-			ResultSet res = st.executeQuery("Select * from MTG_Collection" + c.getSQLFindString());
+			ResultSet res = DatabaseStatement.executeQuery("Select * from MTG_Collection" + c.getSQLFindString());
 			
 				//if a card was found, we need to update the quantity
 				//otherwise create a new card in the database
@@ -180,7 +181,7 @@ class MTGCD
 				int index = res.getInt("id");
 				
 				//execute a query to update the quantity of cards
-				st.executeUpdate
+				DatabaseStatement.executeUpdate
 				(
 					"update MTG_Collection SET Quantity="+
 					Quantity+
@@ -191,7 +192,7 @@ class MTGCD
 			else
 			{
 				System.out.println("Adding new card to database");
-				st.executeUpdate
+				DatabaseStatement.executeUpdate
 				(
 					"INSERT into MTG_Collection " +
 					"(Set_Code,Collector_Number,Foil,Quantity)" +
@@ -209,22 +210,20 @@ class MTGCD
 		}
 	}
 	
-	public static void AddCard(Connection conn)
+	public static void AddCard()
 	{
-		AddCard(conn,GetCard());
+		AddCard(GetCard());
 	}
 	
 	//Removes a card from the database
 		//if this is the last copy, delete the row
-	public static void RemoveCard(Connection conn, Card c)
+	public static void RemoveCard(Card c)
 	{
 		try
 		{
-				//create a statement object to set up database command
-			Statement st = conn.createStatement();
 				//execute a query, and get the response
 				//this query selects all recored (all cards) from the MTG_Collection database
-			ResultSet res = st.executeQuery("Select * from MTG_Collection" + c.getSQLFindString());
+			ResultSet res = DatabaseStatement.executeQuery("Select * from MTG_Collection" + c.getSQLFindString());
 			
 				//if a card was found, we need to update the quantity
 				//otherwise create a new card in the database
@@ -239,7 +238,7 @@ class MTGCD
 					System.out.println("Updating card count");
 						//is at least one card still in database, update value
 						//execute a query to update the quantity of cards
-					st.executeUpdate
+					DatabaseStatement.executeUpdate
 					(
 						"update MTG_Collection SET Quantity="+
 						Quantity+
@@ -251,7 +250,7 @@ class MTGCD
 				{
 					System.out.println("Removing Card from database");
 					//no copys of this card in the database, remove the row
-					st.executeUpdate("delete from MTG_Collection where id="+index);
+					DatabaseStatement.executeUpdate("delete from MTG_Collection where id="+index);
 				}
 			}
 			else
@@ -265,22 +264,20 @@ class MTGCD
 		}
 	}
 	
-	public static void RemoveCard(Connection conn)
+	public static void RemoveCard()
 	{
-		RemoveCard(conn,GetCard());
+		RemoveCard(GetCard());
 	}
 	
 	//Prints all the cards in the database, ordered alphabetically by set code 
 		//then by collectors number
-	public static void PrintAllCards(Connection conn)
+	public static void PrintAllCards()
 	{
 		try
 		{
-				//create a statement object to set up database command
-			Statement st = conn.createStatement();
 				//execute a query, and get the response
 				//this query selects all recored (all cards) from the MTG_Collection database
-			ResultSet res = st.executeQuery
+			ResultSet res = DatabaseStatement.executeQuery
 			(
 				"Select * from MTG_Collection ORDER BY Set_Code ASC, Collector_Number ASC"
 			);
@@ -309,17 +306,13 @@ class MTGCD
 		}
 	}
 	
-	public static void PrintSet(Connection conn, String SET)
+	public static void PrintSet(String SET)
 	{
 		try
 		{
-			
-			
-				//create a statement object to set up database command
-			Statement st = conn.createStatement();
 				//execute a query, and get the response
 				//this query selects all recored (all cards) from the MTG_Collection database
-			ResultSet res = st.executeQuery
+			ResultSet res = DatabaseStatement.executeQuery
 			(
 				"Select * from MTG_Collection "+
 				"where Set_Code='"+ SET +
@@ -350,7 +343,7 @@ class MTGCD
 		}
 	}
 	
-	public static void PrintSet(Connection conn)
+	public static void PrintSet()
 	{
 		while(true)
 		{
@@ -358,7 +351,7 @@ class MTGCD
 			{
 				System.out.println("Enter set code");
 				String SET = reader.readLine().toUpperCase();
-				PrintSet(conn, SET);
+				PrintSet(SET);
 				return;
 			}
 			catch(Exception e)
