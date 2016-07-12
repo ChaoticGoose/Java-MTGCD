@@ -99,7 +99,7 @@ class MTGCD
 		}
 	}
 	
-	public static void Help()
+	private static void Help()
 	{
 		System.out.println("\tThis application assists with managing a database for a Magic The Gathering Collection.");
 		System.out.println("\tThe following commands are available");
@@ -111,7 +111,7 @@ class MTGCD
 		System.out.println("\t\tHELP - Show this message");
 	}
 	
-	public static Card GetCard()
+	private static Card GetCard()
 	{
 		System.out.println
 		(
@@ -176,7 +176,7 @@ class MTGCD
 	
 	//Adds a card to the collection
 		//if there is already a copy of the card, then increment the quantity
-	public static void AddCard(Card c)
+	private static void AddCard(Card c)
 	{
 		try
 		{
@@ -223,14 +223,14 @@ class MTGCD
 		}
 	}
 	
-	public static void AddCard()
+	private static void AddCard()
 	{
 		AddCard(GetCard());
 	}
 	
 	//Removes a card from the database
 		//if this is the last copy, delete the row
-	public static void RemoveCard(Card c)
+	private static void RemoveCard(Card c)
 	{
 		try
 		{
@@ -277,14 +277,14 @@ class MTGCD
 		}
 	}
 	
-	public static void RemoveCard()
+	private static void RemoveCard()
 	{
 		RemoveCard(GetCard());
 	}
 	
 	//Prints all the cards in the database, ordered alphabetically by set code 
 		//then by collectors number
-	public static void PrintAllCards()
+	private static void PrintAllCards()
 	{
 		try
 		{
@@ -319,7 +319,7 @@ class MTGCD
 		}
 	}
 	
-	public static void PrintSet(String SET)
+	private static void PrintSet(String SET)
 	{
 		try
 		{
@@ -356,7 +356,7 @@ class MTGCD
 		}
 	}
 	
-	public static void PrintSet()
+	private static void PrintSet()
 	{
 		while(true)
 		{
