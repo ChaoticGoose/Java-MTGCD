@@ -37,7 +37,7 @@ class MTGCD
 					PrintSet(Input);
 					break;
 				case "help":
-					Help();
+					Help(Input);
 					break;
 				case "exit":
 					DatabaseManager.CloseConnection();
@@ -46,16 +46,45 @@ class MTGCD
 		}
 	}
 	
-	private static void Help()
+	private static void Help(String[] Input)
 	{
-		System.out.println("\tThis application assists with managing a database for a Magic The Gathering Collection.");
-		System.out.println("\tThe following commands are available");
-		System.out.println("\t\tADD - add a copy of a card to the database");
-		System.out.println("\t\tREMOVE - remove a copy of a card from the database");
-		System.out.println("\t\tSET - show a list of all cards from a set, which are in the database");
-		System.out.println("\t\tALL - Show a list of all cards in teh database");
-		System.out.println("\t\tEXIT - Exit the application");
-		System.out.println("\t\tHELP - Show this message");
+		if(Input.length ==1)
+		{
+			System.out.println("This application assists with managing a database for a Magic The Gathering Collection.");
+			System.out.println("The following commands are available");
+			System.out.println("\tADD - add a copy of a card to the database");
+			System.out.println("\tREMOVE - remove a copy of a card from the database");
+			System.out.println("\tSET - show a list of all cards from a set, which are in the database");
+			System.out.println("\tALL - Show a list of all cards in teh database");
+			System.out.println("\tEXIT - Exit the application");
+			System.out.println("\tHELP - Show this message");
+			return;
+		}
+		
+		switch(Input[1])
+		{
+				case "add":
+					System.out.println("Add a card to the database");
+						System.out.println("\t usage: add <set> <number> <foil> <quantity>");
+							System.out.println("\t\t set: three letter set code");
+							System.out.println("\t\t number: the collectors number of the card");
+							System.out.println("\t\t foil: 1 for a foil, 0 for non-foil");
+							System.out.println("\t\t quantity: number greater than 0 (can be blank)");
+					break;
+				case "remove":
+					System.out.println("Remove a card from the database");
+						System.out.println("\t usage: remove <set> <number> <foil> <quantity>");
+							System.out.println("\t\t set: three letter set code");
+							System.out.println("\t\t number: the collectors number of the card");
+							System.out.println("\t\t foil: 1 for a foil, 0 for non-foil");
+							System.out.println("\t\t quantity: number greater than 0 (can be blank)");
+					break;
+				case "set":
+					System.out.println("Show information on all cards from a set in the database");
+						System.out.println("\tUsage: set <set_code>");
+							System.out.println("\t\t set_code: three leter set code");
+					break;
+		}
 	}
 	
 	private static void AddCard(String[] card)

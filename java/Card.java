@@ -72,7 +72,7 @@ class Card
 				{
 					if(f == 1 || f ==0)
 					{
-							Card c = new Card(cn, set, f==1, q);
+							Card c = new Card(cn, set, f==1, q);							
 							return c;
 					}
 				}
