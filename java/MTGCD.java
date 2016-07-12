@@ -4,13 +4,54 @@ import java.sql.*;
 class MTGCD
 {
 	private static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+	private static Connection DatabaseConnection;
 	private static Statement DatabaseStatement;
 	
  	public static void main(String[] argv)
  	{
- 			//define the database to connect to (localhost:3306) and database (MTG_Collection)
+			//attempt to open the connection to the database, if it fails, exit the program
+		if(!OpenConnection()) return;
+		
+		String Input = "";
+		
+			//loop to give CLI
+		while(Input != "exit")
+		{
+			System.out.println("Enter Command");
+			
+			//try to read from command line
+			try{Input = reader.readLine().toLowerCase();}
+				catch(Exception e){System.out.println("Error reading input");}
+			
+			//jump to the correct part of the program for the action the user is trying to perform
+			switch(Input)
+			{
+				case "add":
+					AddCard();
+					break;
+				case "remove":
+					RemoveCard();
+					break;
+				case "set":
+					PrintSet();
+					break;
+				case "all":
+					PrintAllCards();
+					break;
+				case "help":
+					Help();
+					break;
+				case "exit":
+					CloseConnection();
+					return;
+			}
+		}
+	}
+	
+	private static boolean OpenConnection()
+	{
+		//define the database to connect to (localhost:3306) and database (MTG_Collection)
 		String url = "jdbc:mysql://localhost:3306/MTG_Collection";
-
 			//define the toye of database that is being used (mysql)
 		String driver = "com.mysql.jdbc.Driver";
 			//database login name (MTG)
@@ -25,7 +66,7 @@ class MTGCD
 			Class.forName(driver).newInstance();
 				//open a connection to the database
 			//Connection conn = DriverManager.getConnection(url,user,pass);
-			Connection conn = DriverManager.getConnection
+			DatabaseConnection = DriverManager.getConnection
 			(
 				url +
 				"?" +
@@ -36,53 +77,25 @@ class MTGCD
 				"&useSSL=false"
 			);
 			
-			DatabaseStatement = conn.createStatement();
-			
-				//output all cards in the database
-			//PrintAllCards(conn);	
-				//add a card (#2 from EMN) to the database, then remove it
-			//Card ToAdd = new Card(2,"EMN",false);
-			//AddCard(conn, ToAdd);
-			//RemoveCard(conn, ToAdd);
-			
-			String Input = "";
-			
-				//loop to give CLI
-			while(Input != "exit")
-			{
-				System.out.println("Enter Command");
-				Input = reader.readLine().toLowerCase();
-				
-				//jump to the correct part of the program for the action the user is trying to perform
-				switch(Input)
-				{
-					case "add":
-						AddCard();
-						break;
-					case "remove":
-						RemoveCard();
-						break;
-					case "set":
-						PrintSet();
-						break;
-					case "all":
-						PrintAllCards();
-						break;
-					case "exit":
-						return;
-					case "help":
-						Help();
-						break;
-				}
-			}
-
-
-				//close the connection to the database
-			conn.close();
-		} catch (Exception e) 
+			DatabaseStatement = DatabaseConnection.createStatement();
+			return true;
+		}
+		catch(Exception ex)
 		{
-			e.printStackTrace();
-			System.out.println(e.getMessage());
+			System.out.println("Error connecting to Database");
+			return false;
+		}
+	}
+	
+	private static void CloseConnection()
+	{
+		try
+		{
+			DatabaseConnection.close();
+		}
+		catch(Exception ex)
+		{
+			System.out.println("Error closing connection");
 		}
 	}
 	
